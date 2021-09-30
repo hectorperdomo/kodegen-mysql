@@ -14,6 +14,8 @@ export class MySqlGenerator { //implements GeneratorInterface {
 
   constructor(){
     Handlebars.registerHelper('snakeCase', (value) => {
+      if (value.startsWith("$"))
+        return "$" + camelCase(value);
       return snakeCase(value);
     });
 
@@ -22,8 +24,6 @@ export class MySqlGenerator { //implements GeneratorInterface {
     });
 
     Handlebars.registerHelper('camelCase', (value: string) => {
-      if (value.startsWith("$"))
-        return "$" + camelCase(value);
       return camelCase(value);
     });
 
