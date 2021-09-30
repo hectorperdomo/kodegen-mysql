@@ -27,7 +27,7 @@ CREATE TABLE {{../name}}.`{{pascalCase entity}}` (
   {{~#each properties}}
     {{~#if type.array}}{{~else}}
     {{~#if @first}}{{else}},{{~/if}}
-    `{{camelCase name}}` {{> TypeConverter}}
+    `{{snakeCase name}}` {{> TypeConverter}}
     {{~#if optional}}{{else}} NOT NULL{{~/if}}
     {{~#if type.primaryKey}} PRIMARY KEY{{~/if}}
     {{~#if isAutoIncrement}} AUTO_INCREMENT{{~/if}}
@@ -49,7 +49,7 @@ COMMENT = "{{{comment}}}"{{else}}{{~/if}};
 {{#each classes}}
   {{~#each properties}}
     {{~#if type.foreignKey}} 
-ALTER TABLE {{pascalCase ../../name}}.`{{../entity}}` ADD CONSTRAINT fk_{{camelCase ../entity}}_to_{{camelCase type.to}} FOREIGN KEY (`{{camelCase name}}`) REFERENCES {{pascalCase ../../name}}.`{{type.to}}`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE {{pascalCase ../../name}}.`{{../entity}}` ADD CONSTRAINT fk_{{lowerCase ../entity}}_to_{{lowerCase type.to}} FOREIGN KEY (`{{snakeCase name}}`) REFERENCES {{pascalCase ../../name}}.`{{type.to}}`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
     {{/if}}
   {{/each}}
 {{/each}}

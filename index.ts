@@ -4,7 +4,7 @@ import * as Handlebars from 'handlebars';
 import fs from 'fs';
 import {join} from 'path';
 import {plural} from 'pluralize';
-import {camelCase, lowerCase, pascalCase, sentenceCase, titleCase} from 'change-case-all';
+import {camelCase, lowerCase, pascalCase, sentenceCase, snakeCase, titleCase} from 'change-case-all';
 
 
 @singleton()
@@ -13,6 +13,10 @@ export class MySqlGenerator { //implements GeneratorInterface {
   private mainTemplate: Handlebars.TemplateDelegate<any>;
 
   constructor(){
+    Handlebars.registerHelper('snakeCase', (value) => {
+      return snakeCase(value);
+    });
+
     Handlebars.registerHelper('pascalCase', (value) => {
       return pascalCase(value);
     });
