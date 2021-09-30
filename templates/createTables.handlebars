@@ -1,0 +1,55 @@
+{{#*inline "TypeConverter"}}
+{{#with type}}
+{{~#if text}}VARCHAR({{length}})
+{{~else if yesno}}BOOLEAN
+{{~else if decimal}}DECIMAL({{length}},{{decimals}})
+{{~else if float}}FLOAT
+{{~else if integer}}INT
+{{~else if date}}DATE
+{{~else if timestamp}}TIMESTAMP
+{{~else if datetime}}DATETIME
+{{~else if currency}}DECIMAL(13,4)
+{{~else if point}}POINT
+{{~else if array}}
+{{~else if primaryKey}}VARCHAR(36)
+{{~else if foreignKey}}VARCHAR(36)
+{{~else if choices}}VARCHAR(10)
+{{~else}}type: "??"{{type}}
+{{~/if}}
+{{~/with}}
+{{~/inline}}
+
+--
+-- Create the tables
+--
+{{#each classes}}
+CREATE TABLE {{../name}}.`{{pascalCase entity}}` (
+  {{~#each properties}}
+    {{~#if type.array}}{{~else}}
+    {{~#if @first}}{{else}},{{~/if}}
+    `{{camelCase name}}` {{> TypeConverter}}
+    {{~#if optional}}{{else}} NOT NULL{{~/if}}
+    {{~#if type.primaryKey}} PRIMARY KEY{{~/if}}
+    {{~#if isAutoIncrement}} AUTO_INCREMENT{{~/if}}
+    {{~#if isUnique}},{{~/if}}
+    {{~#if default}} DEFAULT {{{unwrap default}}}{{~/if}}
+    {{~#if comment}} COMMENT "{{{comment}}}"{{~/if}}
+    {{~/if}}
+  {{/each}}
+
+){{#if comment}}
+COMMENT = "{{{comment}}}"{{else}}{{~/if}};
+
+{{/each}}
+
+
+--
+-- Create the foreign keys
+--
+{{#each classes}}
+  {{~#each properties}}
+    {{~#if type.foreignKey}} 
+ALTER TABLE {{pascalCase ../../name}}.`{{../entity}}` ADD CONSTRAINT fk_{{camelCase ../entity}}_to_{{camelCase type.to}} FOREIGN KEY (`{{camelCase name}}`) REFERENCES {{pascalCase ../../name}}.`{{type.to}}`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    {{/if}}
+  {{/each}}
+{{/each}}

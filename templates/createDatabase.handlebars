@@ -1,0 +1,21 @@
+--
+-- Prepare the database
+--
+DROP DATABASE IF EXISTS {{name}};
+
+CREATE DATABASE {{name}};
+USE {{name}};
+
+{{> tables }}
+
+--
+-- Insert the type choice data
+--
+
+--
+-- Create the log tables
+--
+
+--
+-- Create the triggers
+--
